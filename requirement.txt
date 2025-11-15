@@ -1,0 +1,6 @@
+requests
+pymongo
+pandas
+numpy
+scikit-learn
+folium
