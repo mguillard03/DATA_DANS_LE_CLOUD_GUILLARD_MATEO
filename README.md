@@ -72,27 +72,58 @@ Le script import_velib.py récupère toutes les stations (~1500) avec :
 
 ## 🔹 Analyse des données
 
-Le script `analyse_velib.py` réalise :
+Le script `analyse_velib.py` réalise les analyses suivantes :
 
 ### Statistiques globales
-- Moyenne, min, max, quartiles pour vélos disponibles, docks et capacité.
+- **Nombre total de stations** : 1500
+- **Vélos disponibles** : moyenne ≈ 12, min = 0, max = 73
+- **Docks disponibles** : moyenne ≈ 19, min = 0, max = 100
+- **Capacité totale** : moyenne ≈ 32, min = 0, max = 105
+
+Quartiles pour vélos disponibles, docks et capacité :
+- 25% : 4 vélos / 9 docks / 23 capacité  
+- 50% : 9 vélos / 17 docks / 30 capacité  
+- 75% : 18 vélos / 26 docks / 38 capacité
 
 ### Analyse par commune
-- Somme des vélos disponibles par arrondissement.
+Somme des vélos disponibles par arrondissement (top 10) :
+
+| Commune                  | Vélos disponibles |
+|---------------------------|-----------------|
+| Paris                     | 11 920          |
+| Issy-les-Moulineaux       | 508             |
+| Boulogne-Billancourt      | 411             |
+| Saint-Denis               | 343             |
+| Ivry-sur-Seine            | 279             |
+| Pantin                    | 244             |
+| Asnières-sur-Seine        | 232             |
+| Clichy                    | 227             |
+| Vitry-sur-Seine           | 205             |
+| Créteil                   | 179             |
 
 ### Clustering des stations (KMeans)
-- Classification selon `numbikesavailable` et `numdocksavailable`.
+Classification selon `numbikesavailable` et `numdocksavailable`. Exemple de clusters :
 
-Exemple de clusters :
+| Cluster | Nb stations | Vélos moy | Docks moy | Capacité moy |
+|---------|------------|------------|-----------|--------------|
+| 0       | 474        | 6.76       | 14.10     | 21.80        |
+| 1       | 97         | 40.55      | 10.27     | 51.75        |
+| 2       | 164        | 7.37       | 42.71     | 50.91        |
+| 3       | 341        | 20.90      | 6.43      | 28.37        |
+| 4       | 424        | 6.52       | 26.45     | 33.83        |
+
 - **Cluster 0** : peu de vélos et peu de docks  
 - **Cluster 1** : beaucoup de vélos, peu de docks  
 - **Cluster 2** : peu de vélos, beaucoup de docks  
 - **Cluster 3** : moyenne disponibilité  
-- **Cluster 4** : intermédiaire  
+- **Cluster 4** : intermédiaire
 
 ### Régression linéaire
-- Prédiction de la capacité à partir du nombre de vélos mécaniques et eBikes.  
-- Score R² ≈ 0.20 (modèle simple).
+- Prédiction de la **capacité totale** à partir du nombre de vélos mécaniques et eBikes.
+- **Coefficients** : `[0.52, 0.52]`  
+- **Intercept** : `25.48`  
+- **Score R²** : `≈ 0.20` (modèle simple, pas très prédictif mais montre une tendance)
+
 
 ---
 
@@ -107,5 +138,26 @@ Le script `carte_velib.py` crée des cartes interactives avec **Folium** :
 
 - Une deuxième carte peut afficher les **clusters** avec 5 couleurs distinctes.
 
-> Les cartes sont sauvegardées en HTML dans le dossier `maps` et peuvent être ouvertes dans n’importe quel navigateur.
+> Les cartes sont sauvegardées en HTML dans le dossier `maps`.
+
+
+## 🔹 Usage
+
+1. **Lancer MongoDB local**  
+   Assurez-vous que votre serveur MongoDB fonctionne sur votre machine (par défaut `mongodb://localhost:27017`).
+
+2. **Récupérer les données**  
+   Exécutez le script `import_velib.py` pour récupérer les données Vélib’ Paris depuis l’API et les insérer dans MongoDB local :  
+   python import_velib.py  
+   Ce script télécharge environ 1500 stations et les stocke dans la collection stations de la base velib_paris.
+
+3. **Analyser les données**   
+   python scripts/analyse_velib.py  
+   Ce script fait des analyses sur les stations et des comparaisons entre clusters.
+
+4. **Visualiser les cartes**  
+   python maps/carte_velib.py  
+
+   
+
 
