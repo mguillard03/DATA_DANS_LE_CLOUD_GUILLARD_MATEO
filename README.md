@@ -14,7 +14,6 @@ Le projet inclut :
 - Clustering des stations selon la disponibilité des vélos et des docks.  
 - Régression linéaire pour prédire la capacité d’une station.  
 - Cartes interactives avec Folium pour visualiser la disponibilité et les clusters.  
-- Architecture prévue pour ajouter **Neo4J** dans une seconde partie du projet.
 
 ---
 
