@@ -134,7 +134,7 @@ Le script `carte_velib.py` crée des cartes interactives avec **Folium** :
 - Points colorés selon vélos disponibles :  
   - 0-5 vélos → 🔴 rouge  
   - 6-10 vélos → 🟡 jaune  
-  - + 10 vélos → 🟢 vert  
+  - plus 10 vélos → 🟢 vert  
 
 - Une deuxième carte peut afficher les **clusters** avec 5 couleurs distinctes.
 
