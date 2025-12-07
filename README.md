@@ -135,7 +135,11 @@ Le script `carte_velib.py` crée des cartes interactives avec **Folium** :
   - 6-10 vélos → 🟡 jaune  
   - plus 10 vélos → 🟢 vert  
 
+<img width="1888" height="873" alt="image" src="https://github.com/user-attachments/assets/0bac706b-4739-4943-9148-4884fbefb91e" />
+
 - Une deuxième carte peut afficher les **clusters** avec 5 couleurs distinctes.
+
+<img width="1577" height="900" alt="image" src="https://github.com/user-attachments/assets/9eb7f197-2617-4da3-aaf1-73e728396698" />
 
 > Les cartes sont sauvegardées en HTML dans le dossier `maps`.
 
