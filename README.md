@@ -159,25 +159,25 @@ Le script `carte_velib.py` crée des cartes interactives avec **Folium** :
 
 
 
-# Projet Neo4J – Game of Thrones 
+# Projet Neo4J – Game of Thrones
 
 Base de données graphe autour des personnages, maisons et batailles
 
 ---
 
-## **1. Contexte**
+## 1. Contexte
 
 Ce projet a pour objectif de modéliser une partie de l’univers de *Game of Thrones* au sein d’une base de données Neo4j.
 Nous utilisons une approche orientée graphe pour représenter :
 
-* les **maisons** (Houses)
-* les **personnages** (Characters)
-* les **batailles** (Battles)
+* les maisons (Houses)
+* les personnages (Characters)
+* les batailles (Battles)
 * les relations d’allégeance, de participation à une bataille, ou encore d’événements comme la mort d’un personnage.
 
 ---
 
-##  **2. Jeux de données utilisés**
+## 2. Jeux de données utilisés
 
 Les données proviennent d’un dépôt public GitHub :
 
@@ -187,15 +187,15 @@ Les données proviennent d’un dépôt public GitHub :
 * **character-deaths.csv**
   Inclut : nom du personnage, allégeance, année de mort, chapitres, niveau de noblesse…
 
-Les fichiers sont disponibles ici :
+Fichiers disponibles ici :
 `./Data/battles.csv`
 `./Data/character-deaths.csv`
 
 ---
 
-##  **3. Modélisation du graphe**
+## 3. Modélisation du graphe
 
-### **Nœuds**
+### Nœuds
 
 | Label       | Description                                    |
 | ----------- | ---------------------------------------------- |
@@ -203,7 +203,7 @@ Les fichiers sont disponibles ici :
 | `House`     | Une maison à laquelle un personnage appartient |
 | `Battle`    | Un événement militaire                         |
 
-### **Relations**
+### Relations
 
 | Relation                               | Description                                  |
 | -------------------------------------- | -------------------------------------------- |
@@ -214,24 +214,30 @@ Les fichiers sont disponibles ici :
 
 ---
 
-##  **4. Import dans Neo4j Aura**
+## Diagramme du modèle
 
-###  Avant toute chose
+<img width="701" height="712" alt="image" src="https://github.com/user-attachments/assets/e127ea09-bd6f-45fb-abc1-77ed83b29237" />
 
-Dans Neo4j Aura, utiliser **LOAD CSV FROM** nécessite un fichier accessible publiquement via HTTPS.
+---
 
-###  **Création des nœuds House**
+## 4. Import dans Neo4j Aura
+
+### Pré-requis
+
+Neo4j Aura nécessite que les CSV soient publiquement accessibles via HTTPS.
+
+### Création des nœuds House
 
 ```cypher
-LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/<<ton_repo>>/Data/character-deaths.csv" AS row
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/mguillard03/DATA_DANS_LE_CLOUD_GUILLARD_MATEO/main/Data/character-deaths.csv" AS row
 WITH DISTINCT row.Allegiances AS house WHERE house <> 'None' AND house IS NOT NULL
 CREATE (:House {name: house});
 ```
 
-###  **Création des nœuds Character et appartenance**
+### Création des nœuds Character et appartenance
 
 ```cypher
-LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/<<ton_repo>>/Data/character-deaths.csv" AS row
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/mguillard03/DATA_DANS_LE_CLOUD_GUILLARD_MATEO/main/Data/character-deaths.csv" AS row
 MERGE (c:Character {name: row.Name})
 WITH c, row
 WHERE row.Allegiances <> 'None' AND row.Allegiances IS NOT NULL
@@ -239,24 +245,23 @@ MATCH (h:House {name: row.Allegiances})
 MERGE (c)-[:BELONGS_TO]->(h);
 ```
 
-###  **Création des nœuds Battle**
+### Création des nœuds Battle
 
 ```cypher
-LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/<<ton_repo>>/Data/battles.csv" AS row
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/mguillard03/DATA_DANS_LE_CLOUD_GUILLARD_MATEO/main/Data/battles.csv" AS row
 CREATE (:Battle {
   name: row.name,
   year: toInteger(row.year),
   attacker_king: row.attacker_king,
-  defender_king: row.defender_king,
-}}); 
+  defender_king: row.defender_king
+});
 ```
 
-###  **Création des relations ATTACKED & DEFENDED**
+### Relations ATTACKED & DEFENDED
 
 ```cypher
-LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/<<ton_repo>>/Data/battles.csv" AS row
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/mguillard03/DATA_DANS_LE_CLOUD_GUILLARD_MATEO/main/Data/battles.csv" AS row
 MATCH (b:Battle {name: row.name})
-WITH row, b
 UNWIND [row.attacker_1, row.attacker_2, row.attacker_3, row.attacker_4] AS atk
 WITH b, atk WHERE atk IS NOT NULL AND atk <> ""
 MATCH (h:House {name: atk})
@@ -264,7 +269,7 @@ MERGE (h)-[:ATTACKED]->(b);
 ```
 
 ```cypher
-LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/<<ton_repo>>/Data/battles.csv" AS row
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/mguillard03/DATA_DANS_LE_CLOUD_GUILLARD_MATEO/main/Data/battles.csv" AS row
 MATCH (b:Battle {name: row.name})
 UNWIND [row.defender_1, row.defender_2, row.defender_3, row.defender_4] AS def
 WITH b, def WHERE def IS NOT NULL AND def <> ""
@@ -272,7 +277,7 @@ MATCH (h:House {name: def})
 MERGE (h)-[:DEFENDED]->(b);
 ```
 
-###  **Création des relations DIED_IN**
+### Relation DIED_IN
 
 ```cypher
 MATCH (c:Character) WHERE c.DeathYear IS NOT NULL
@@ -283,9 +288,15 @@ MERGE (c)-[:DIED_IN]->(b);
 
 ---
 
-##  **5. Quelques requêtes utiles**
+## 5. Requêtes utiles
 
-###  Les maisons les plus impliquées dans les batailles
+### Maisons les plus impliquées dans des batailles
+
+### (À remplacer par une capture de Neo4j Browser)
+
+```
+[PLACEHOLDER_IMAGE_IMPLICATION_MAISONS]
+```
 
 ```cypher
 MATCH (h:House)-[r]->(b:Battle)
@@ -293,14 +304,30 @@ RETURN h.name AS house, type(r) AS role, count(*) AS occurrences
 ORDER BY occurrences DESC;
 ```
 
-###  Les personnages par maison
+---
+
+### Personnages par maison
+
+### (À remplacer par une capture de Neo4j Browser)
+
+```
+[PLACEHOLDER_IMAGE_PERSONNAGES_PAR_MAISON]
+```
 
 ```cypher
 MATCH (h:House)<-[:BELONGS_TO]-(c:Character)
 RETURN h.name AS house, collect(c.name) AS members;
 ```
 
-###  Les batailles avec le plus de participants
+---
+
+### Batailles avec le plus de participants
+
+### (À remplacer par une capture de Neo4j Browser)
+
+```
+[PLACEHOLDER_IMAGE_BATAILLES_PARTICIPANTS]
+```
 
 ```cypher
 MATCH (h)-[:ATTACKED|DEFENDED]->(b:Battle)
@@ -310,32 +337,27 @@ ORDER BY houses DESC;
 
 ---
 
-##  **6. Export de la base (AuraDB)**
+## 6. Export de la base (AuraDB)
 
 ```cypher
 CALL apoc.export.cypher.all(null, {stream:true, format:'cypher-shell'})
 YIELD cypherStatements
 RETURN cypherStatements;
 ```
-Le fichier est disponible ici :
+
+Fichier exporté :
 `./Data/metadonnee_neo4j_GOT.csv`
 
-
 ---
 
-##  **7. Diagramme du modèle**
-
-<img width="701" height="712" alt="image" src="https://github.com/user-attachments/assets/e127ea09-bd6f-45fb-abc1-77ed83b29237" />
-
-
----
-
-##  **8. Auteur**
+## 7. Auteur
 
 Projet réalisé pour le module *Data dans le cloud* à Sup De Vinci
-Par **Guillard Mateo**
+Par Guillard Mateo
+
 
 ---
+
 
 
 
