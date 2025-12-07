@@ -292,48 +292,37 @@ MERGE (c)-[:DIED_IN]->(b);
 
 ### Maisons les plus impliquées dans des batailles
 
-### (À remplacer par une capture de Neo4j Browser)
-
-```
-[PLACEHOLDER_IMAGE_IMPLICATION_MAISONS]
-```
-
 ```cypher
 MATCH (h:House)-[r]->(b:Battle)
 RETURN h.name AS house, type(r) AS role, count(*) AS occurrences
 ORDER BY occurrences DESC;
 ```
+<img width="910" height="565" alt="image" src="https://github.com/user-attachments/assets/9eae782e-0bfc-462a-8747-f7e32341402e" />
+
 
 ---
 
 ### Personnages par maison
-
-### (À remplacer par une capture de Neo4j Browser)
-
-```
-[PLACEHOLDER_IMAGE_PERSONNAGES_PAR_MAISON]
-```
 
 ```cypher
 MATCH (h:House)<-[:BELONGS_TO]-(c:Character)
 RETURN h.name AS house, collect(c.name) AS members;
 ```
 
+<img width="1093" height="487" alt="image" src="https://github.com/user-attachments/assets/742c7cab-702b-4d87-9b57-b1c6eec3fc1f" />
+
+
 ---
 
 ### Batailles avec le plus de participants
-
-### (À remplacer par une capture de Neo4j Browser)
-
-```
-[PLACEHOLDER_IMAGE_BATAILLES_PARTICIPANTS]
-```
 
 ```cypher
 MATCH (h)-[:ATTACKED|DEFENDED]->(b:Battle)
 RETURN b.name AS battle, count(h) AS houses
 ORDER BY houses DESC;
 ```
+
+<img width="412" height="587" alt="image" src="https://github.com/user-attachments/assets/f5db3c0a-2fdc-407c-b034-4f8a117dd0a5" />
 
 ---
 
