@@ -244,6 +244,7 @@ WHERE row.Allegiances <> 'None' AND row.Allegiances IS NOT NULL
 MATCH (h:House {name: row.Allegiances})
 MERGE (c)-[:BELONGS_TO]->(h);
 ```
+<img width="527" height="633" alt="image" src="https://github.com/user-attachments/assets/d041ea62-3afd-4086-b658-20c9a2563a43" />
 
 ### Création des nœuds Battle
 
