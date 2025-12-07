@@ -267,6 +267,8 @@ WITH b, atk WHERE atk IS NOT NULL AND atk <> ""
 MATCH (h:House {name: atk})
 MERGE (h)-[:ATTACKED]->(b);
 ```
+<img width="542" height="502" alt="image" src="https://github.com/user-attachments/assets/555b321e-1b48-48f9-a447-ffc861fa3b50" />
+
 
 ```cypher
 LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/mguillard03/DATA_DANS_LE_CLOUD_GUILLARD_MATEO/main/Data/battles.csv" AS row
@@ -276,6 +278,8 @@ WITH b, def WHERE def IS NOT NULL AND def <> ""
 MATCH (h:House {name: def})
 MERGE (h)-[:DEFENDED]->(b);
 ```
+<img width="552" height="485" alt="image" src="https://github.com/user-attachments/assets/057a1430-ac22-4059-baf0-f6f00aa72209" />
+
 
 ### Relation DIED_IN
 
